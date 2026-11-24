@@ -1,0 +1,48 @@
+using UnityEngine;
+
+public class RayCast2D : MonoBehaviour
+{
+    public float rayDistance = 5f;
+    public Color hitColor = Color.green;
+    public Color normalColor = Color.red;
+
+    void Start()
+    {
+        
+    }
+
+    
+    void Update()
+    {
+        Vector3 mouseWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Debug.Log(mouseWorld.z);
+
+        mouseWorld.z = 0f;
+
+        Vector2 origin = transform.position;
+        Vector2 direction = ((Vector2)mouseWorld - origin).normalized;
+
+        RaycastHit2D hit = Physics2D.Raycast(origin, direction, rayDistance);
+
+        if (hit.collider != null)
+        {
+            ResetAllColors();
+            SpriteRenderer sr = hit.collider.GetComponent<SpriteRenderer>();
+            if (sr != null)
+                sr.color = hitColor;
+        }
+        else
+            ResetAllColors();
+
+        Debug.DrawRay(origin, direction * rayDistance, Color.red);
+    }
+
+    void ResetAllColors()
+    {
+        SpriteRenderer[] allSprites = FindObjectsOfType<SpriteRenderer>();
+        foreach (SpriteRenderer sr in allSprites)
+        {
+            sr.color = normalColor;
+        }
+    }
+}

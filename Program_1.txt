@@ -1,0 +1,60 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class prgm1 : MonoBehaviour
+{
+    public float moveSpeed = 5f;
+    public float rotateSpeed = 50f;
+    public float scaleSpeed = 0.5f;
+
+    void Update()
+    {
+        HandleMovement();
+        HandleRotation();
+        HandleScaling();
+    }
+
+    void HandleMovement()
+    {
+        var kb = Keyboard.current;
+        if (kb == null) return;
+
+        float moveX = 0f;
+        float moveY = 0f;
+        float moveZ = 0f;
+
+        if (kb.dKey.isPressed || kb.rightArrowKey.isPressed) moveX += 1f;
+        if (kb.aKey.isPressed || kb.leftArrowKey.isPressed) moveX -= 1f;
+
+        if (kb.wKey.isPressed || kb.upArrowKey.isPressed) moveZ += 1f;
+        if (kb.sKey.isPressed || kb.downArrowKey.isPressed) moveZ -= 1f;
+
+        if (kb.spaceKey.isPressed) moveY += 1f;
+        if (kb.leftShiftKey.isPressed) moveY -= 1f;
+
+        Vector3 move = new Vector3(moveX, moveY, moveZ) * moveSpeed * Time.deltaTime;
+        transform.Translate(move);
+    }
+
+    void HandleRotation()
+    {
+        var kb = Keyboard.current;
+        if (kb == null) return;
+
+        if (kb.qKey.isPressed)
+            transform.Rotate(Vector3.up, -rotateSpeed * Time.deltaTime);
+        if (kb.eKey.isPressed)
+            transform.Rotate(Vector3.up, rotateSpeed * Time.deltaTime);
+    }
+
+    void HandleScaling()
+    {
+        var kb = Keyboard.current;
+        if (kb == null) return;
+
+        if (kb.rKey.isPressed)
+            transform.localScale += Vector3.one * scaleSpeed * Time.deltaTime;
+        if (kb.fKey.isPressed && transform.localScale.x > 0.1f)
+            transform.localScale -= Vector3.one * scaleSpeed * Time.deltaTime;
+    }
+}

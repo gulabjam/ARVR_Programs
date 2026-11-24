@@ -1,0 +1,86 @@
+using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Video;
+using UnityEngine.InputSystem;
+
+public class VideoScreenController : MonoBehaviour
+{
+    [SerializeField] private VideoPlayer videoPlayer;
+    [SerializeField] private Button playButton;
+    [SerializeField] private Button pauseButton;
+
+    [Header("Keyboard Controls")]
+    [SerializeField] private Key togglePlayPauseKey = Key.Space;
+    [SerializeField] private Key playKey = Key.P;
+    [SerializeField] private Key pauseKey = Key.O;
+
+    private void Start()
+    {
+        if (videoPlayer == null)
+        {
+            videoPlayer = GetComponent<VideoPlayer>();
+        }
+
+        if (playButton != null)
+        {
+            playButton.onClick.AddListener(PlayVideo);
+        }
+
+        if (pauseButton != null)
+        {
+            pauseButton.onClick.AddListener(PauseVideo);
+        }
+    }
+
+    private void Update()
+    {
+        if (Keyboard.current == null) return;
+
+        if (Keyboard.current[togglePlayPauseKey].wasPressedThisFrame)
+        {
+            if (videoPlayer.isPlaying)
+                PauseVideo();
+            else
+                PlayVideo();
+        }
+
+        if (Keyboard.current[playKey].wasPressedThisFrame)
+        {
+            PlayVideo();
+        }
+
+        if (Keyboard.current[pauseKey].wasPressedThisFrame)
+        {
+            PauseVideo();
+        }
+    }
+
+    public void PlayVideo()
+    {
+        if (!videoPlayer.isPlaying)
+        {
+            videoPlayer.Play();
+        }
+    }
+
+    public void PauseVideo()
+    {
+        if (videoPlayer.isPlaying)
+        {
+            videoPlayer.Pause();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (playButton != null)
+        {
+            playButton.onClick.RemoveListener(PlayVideo);
+        }
+
+        if (pauseButton != null)
+        {
+            pauseButton.onClick.RemoveListener(PauseVideo);
+        }
+    }
+}
